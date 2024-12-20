@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body {
+        background-color: white; /* Ensure the iframe has a white background */
+      }
+
+      :root {
+        --bg-color: #f0f4f8;
+        --text-color: #333;
+        --content-bg: #ffffff;
+        --content-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        --accent-color: #4a90e2;
+      }
+
+      body.dark-theme {
+        --bg-color: #1a1a2e;
+        --text-color: #f0f4f8;
+        --content-bg: #2a2a40;
+        --content-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+        --accent-color: #9575cd;
+      }
+
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: var(--accent-color);
+      }
+
+      #theme-toggle {
+        background: var(--content-bg);
+        color: var(--text-color);
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+      }
+
+      #theme-toggle:hover {
+        transform: scale(1.05);
+        box-shadow: var(--content-shadow);
+      }
+
+      #color-picker {
+        width: 100px;
+        height: 30px;
+      }
+
+      #content-container {
+        width: 80%;
+        margin: 20px auto;
+        padding: 20px;
+      }
+
+      .content-item {
+        background-color: var(--content-bg);
+        margin-bottom: 20px;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: var(--content-shadow);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .content-item h2 {
+        color: var(--accent-color);
+        margin-top: 0;
+      }
+
+      .content-item p {
+        color: var(--text-color);
+      }
+
+      .content-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .content-item::before {
+        content: "";
+        position: absolute;
+        top: -100%;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(transparent, rgba(255, 255, 255, 0.2));
+        transition: all 0.5s;
+        z-index: 1;
+      }
+
+      .content-item:hover::before {
+        top: 0;
+      }
+    </style>
+
+    <!-- Google Analytics -->
+    <!-- Google tag (gtag.js) -->
+    <script async fetchpriority="low"
+      src="https://www.googletagmanager.com/gtag/js?id=G-V187TY0SPN"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-V187TY0SPN', {
+        'cookie_flags': 'SameSite=None; Secure',
+        'cookie_domain': 'eric15342335.github.io'
+      });
+    </script>
+    <!-- End Google Analytics -->
+
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "o9poktpwjv");
+    </script>
+    <!-- End Microsoft Clarity -->
+
+    <!-- GoatCounter -->
+    <script async fetchpriority="low"
+      data-goatcounter="https://eric310.goatcounter.com/count"
+      src="/src/thirdparty/count.js"></script>
+    <!-- End GoatCounter -->
+
+    <!-- Google AdSense -->
+    <script async crossorigin="anonymous"
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1706655606350284"></script>
+    <!-- End Google AdSense -->
+  </head>
+  <body>
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Infinite Scroll with Random Content</title>
+        <link rel="stylesheet" href="styles.css">
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        >
+      </head>
+      <body>
+        <header>
+          <button id="theme-toggle">
+            <i class="fas fa-adjust"></i> Toggle Theme
+          </button>
+          <div id="color-picker"></div>
+        </header>
+        <div id="content-container"></div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.0/anime.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/colorjoe@1.0.1/dist/colorjoe.min.js"></script>
+        <script src="script.js"></script>
+      </body>
+    </html>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const container = document.getElementById("content-container");
+        const recentContents = [];
+
+        // Function to generate random content with emojis
+        function generateRandomContent() {
+          const titles = [
+            "🚀 A New Adventure",
+            "🧭 Mystery of the Deep",
+            "🏰 The Lost City",
+            "🌠 Starlight Expedition",
+            "⏳ Echoes of Time",
+            "🌌 The Forgotten Realm",
+            "💨 Whispers of the Wind",
+            "💎 The Crystal Cavern",
+          ];
+          const paragraphs = [
+            "Once upon a time in a land far away, there was a kingdom where magic was as common as the air we breathe. 🧙‍♂️",
+            "Deep beneath the ocean waves, explorers discovered a city of gold, untouched by time. 🪙",
+            "In the heart of the jungle, an ancient city was found, its secrets hidden for centuries. 🌿",
+            "Astronauts on a mission to Mars found something unexpected - signs of ancient life. 👽",
+            "In a quiet village, the clock tower chimed at odd hours, hinting at a forgotten history. 🕰️",
+            "A portal to another dimension was opened in an old library, leading to adventures beyond imagination. 📚",
+            "The winds carried secrets from the past, revealing tales of lost civilizations. 🌬️",
+            "Deep within a mountain, explorers stumbled upon a cavern where crystals sang with the earth's heartbeat. 🎶",
+          ];
+
+          let randomTitle, randomParagraph;
+          do {
+            randomTitle = titles[Math.floor(Math.random() * titles.length)];
+            randomParagraph =
+              paragraphs[Math.floor(Math.random() * paragraphs.length)];
+          } while (
+            recentContents.includes(randomTitle) ||
+            recentContents.includes(randomParagraph)
+          );
+
+          recentContents.push(randomTitle, randomParagraph);
+          if (recentContents.length > 8) {
+            recentContents.splice(0, 2);
+          }
+
+          return `
+            <div class="content-item">
+            <h2>${randomTitle}</h2>
+            <p>${randomParagraph}</p>
+            </div>
+            `;
+        }
+
+        // Function to load more content with animation
+        function loadMoreContent() {
+          for (let i = 0; i < 5; i++) {
+            const content = generateRandomContent();
+            const div = document.createElement("div");
+            div.innerHTML = content;
+            container.appendChild(div);
+            anime({
+              targets: div,
+              translateY: [-10, 0],
+              opacity: [0, 1],
+              duration: 500,
+              easing: "easeOutExpo",
+            });
+          }
+        }
+
+        // Initial load
+        loadMoreContent();
+
+        // Infinite scroll setup
+        window.addEventListener("scroll", () => {
+          if (
+            window.innerHeight + window.scrollY >=
+            document.body.offsetHeight - 500
+          ) {
+            loadMoreContent();
+          }
+        });
+
+        // Theme toggle
+        const themeToggle = document.getElementById("theme-toggle");
+        themeToggle.addEventListener("click", () => {
+          document.body.classList.toggle("dark-theme");
+          themeToggle.innerHTML = document.body.classList.contains("dark-theme")
+            ? '<i class="fas fa-sun"></i> Light Theme'
+            : '<i class="fas fa-moon"></i> Dark Theme';
+        });
+
+        // Color picker for theme customization
+        const colorPicker = new colorjoe("#color-picker", {
+          color: "#4a90e2",
+          onChange: function (color) {
+            document.documentElement.style.setProperty(
+              "--accent-color",
+              color.hex()
+            );
+          },
+        });
+      });
+    </script>
+  </body>
+</html>
